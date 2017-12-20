@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <title>Login & Reg</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'userdash/css/userdash.css' %}">
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <hr>
+            <h5>TestApp</h5>
+            <h6>Dashboard</h6>
+            <h6><a href="/users/show/{{user.id}}">Profile</a></h6>
+            <h6><a href="/users/show/{{user.id}}">Log off</a></h6>
+            <hr>
+        </div>
+        <div id="main_body">
+            <h2>View Users</h2>
+            <a href="/users/addnew"><button>Add new user</button></a>
+        </div>
+        <div id="table">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name^</th>
+                    <th>Email</th>
+                    <th>created_at</th>
+                    <th>user_level</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
