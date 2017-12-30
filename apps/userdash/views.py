@@ -92,12 +92,12 @@ def home(request):
         request.session['id']
         print 'logged in'
     except:
-
         return redirect('/signin')
     checkuser = User.objects.get(id = request.session['id'])
     if not checkuser.admin:
         context = {
             'user':User.objects.get(id = request.session['id']),
+            'all_users': User.objects.exclude(id = request.session['id']),
         }
         return render(request, 'userdash/user_home.html', context)
     elif checkuser.admin:
@@ -134,7 +134,7 @@ def adminedit(request, user_id):
 
 def edit_user(request, user_id):
     if request.method == 'POST':
-        the_user = User.objects.get(id = request.session['id'])
+        the_user = User.objects.get(id = user_id)
         if not the_user.admin:
             return redirect('/edit')
         else:
@@ -157,15 +157,24 @@ def edit_pass(request, user_id):
     if request.method == 'POST':
         the_user = User.objects.get(id = request.session['id'])
         if not the_user.admin:
-            return redirect('/edit')
+            if int(the_user.id) == int(user_id):
+                check_submission = User.objects.validatePass(request.POST, user_id)
+                if len(check_submission) > 0:
+                    for message in check_submission['error']:
+                        print message
+                        messages.error(request, message)
+                        print messages.error
+                else:
+                    update = User.objects.editPass(request.POST, user_id)
+                    messages.success(request, 'Successfully updated user info')
+                    return redirect('/users/edit')
+            else:
+                return redirect('/dashboard')
         else:
             check_submission = User.objects.validatePass(request.POST, user_id)
             if len(check_submission) > 0:
                 for message in check_submission['error']:
-                    print message
                     messages.error(request, message)
-                    print messages.error
-
             else:
                 update = User.objects.editPass(request.POST, user_id)
                 messages.success(request, 'Successfully updated user info')
@@ -229,3 +238,47 @@ def remove(request, user_id):
         return redirect('/edit')
     return HttpResponse('learn to cascade first')
 
+def edit_by_user(request):
+    context = {
+        'user':User.objects.get(id = request.session['id']),
+    }
+    return render(request, 'userdash/user_edit.html', context)
+
+def user_update(request, user_id):
+    if request.method == 'POST':
+        if int(user_id) == int(request.session['id']):
+            the_user = User.objects.get(id = request.session['id'])
+            check_submission = User.objects.validateEdit(request.POST, user_id)
+            if len(check_submission) > 0:
+                for message in check_submission['error']:
+                    print message
+                    messages.error(request, message)
+                    print messages.error
+                return redirect('/users/edit')
+            else:
+                update = User.objects.edituser_user(request.POST, user_id)
+                messages.success(request, 'Successfully updated your info')
+                return redirect('/users/edit')
+        else:
+            print 'user cannot edit other pages'
+            return redirect('/users/edit')
+    else:
+        print 'get out of user_update'
+        return redirect('/')
+
+def editdesc(request, user_id):
+    if request.method == 'POST':
+        if int(user_id) == int(request.session['id']):
+            if len(request.POST['description']) < 1:
+                message.error(request, 'Please enter a description')
+                return redirect('/users/edit')
+            the_user = User.objects.get(id = request.session['id'])
+            update = User.objects.editDesc(request.POST, user_id)
+            messages.success(request, 'Successfully updated your info')
+            return redirect('/users/edit')
+        else:
+            print 'user cannot edit other pages'
+            return redirect('/users/edit')
+    else:
+        print 'get out of edit desc'
+        return redirect('/')

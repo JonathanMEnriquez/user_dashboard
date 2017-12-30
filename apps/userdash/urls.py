@@ -18,6 +18,9 @@ urlpatterns = [
     url(r'^add_message/(?P<user_id>\d+)$', views.addmessage),
     url(r'^add_comment/(?P<user_id>\d+)/(?P<message_id>\d+)$', views.addcomment),
     url(r'^users/edit/(?P<user_id>\d+)$', views.adminedit),
+    url(r'^users/edit$', views.edit_by_user),
+    url(r'^update/(?P<user_id>\d+)$', views.user_update),
     url(r'^users/show/(?P<user_id>\d+)$', views.show),
     url(r'^users/remove/(?P<user_id>\d+)$', views.remove),
+    url(r'^edit/desc/(?P<user_id>\d+$)', views.editdesc),
 ]

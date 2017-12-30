@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login & Reg</title>
+    <title>User Information</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'userdash/css/userdash.css' %}">
 </head>
@@ -15,7 +15,10 @@
             <h5>TestApp</h5>
             <h6><a href="/dashboard">Dashboard</a></h6>
             <h6><a href="/users/show/{{user.id}}">Profile</a></h6>
-            <h6><a href="/users/show/{{user.id}}">Log off</a></h6>
+            {% if user.id == request.session.id %}
+            <h6><a href="/users/edit">Edit Profile</a></h6>
+            {% endif %}
+            <h6><a href="/logout">Log off</a></h6>
             <hr>
         </div>
         <div id="user_info">
@@ -35,7 +38,7 @@
                 </tr>
                 <tr>
                     <td>Description:</td>
-                    <td>{{user.id}}</td>   
+                    <td>"{{user.description}}"</td>   
                 </tr>
             </table>
             <hr>

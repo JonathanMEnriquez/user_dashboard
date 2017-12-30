@@ -158,6 +158,15 @@ class UserManager(models.Manager):
         update.save()
         return user_id
 
+    def edituser_user(self, postData, user_id):
+        update = User.objects.get(id = user_id)
+        update.first_name = postData['first_name']
+        update.last_name = postData['last_name']
+        update.email = postData['email']
+        update.username = postData['username']
+        update.save()
+        return user_id
+
     def validatePass(self, postData, user_id):
         response = {}
         if postData['password'] != postData['confirm_password']:
@@ -180,6 +189,13 @@ class UserManager(models.Manager):
         user = User.objects.get(id=user_id)
         user.password = hashed_pw
         user.save()
+        return
+
+    def editDesc(self, postData, user_id):
+        user = User.objects.get(id = user_id)
+        user.description = postData['description']
+        user.save()
+        return
 
 class User(models.Model):
     first_name = models.CharField(max_length = 255)
